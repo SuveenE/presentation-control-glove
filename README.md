@@ -12,7 +12,8 @@ This is one of the capstone projects under National University of Singapore cour
 
 Watch the system in action controlling Google Presentations:
 
-<video src="assets/demo_gpresentation_glove.mp4" controls width="600"></video>
+https://github.com/user-attachments/assets/d4b98293-3bb8-4b1d-89e3-794cf29e6228
+
 ## 🎯 Overview
 
 This project implements a real-time gesture recognition system using data from two IMU (Inertial Measurement Unit) sensors - one on the wrist and one on the index finger. The system:
@@ -27,7 +28,7 @@ This project implements a real-time gesture recognition system using data from t
 
 See the gesture guide video for visual demonstrations of each gesture:
 
-<video src="assets/gesture_guide.mp4" controls width="600"></video>
+https://github.com/user-attachments/assets/b3b03278-9d59-4526-8d9c-4a84b0b6c4f9
 
 - 0 - NONE
 - 1 - SLIDE_LEFT
