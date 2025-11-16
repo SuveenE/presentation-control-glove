@@ -1,23 +1,10 @@
-# Real-Time Gesture Recognition with FPGA Acceleration
+# Presentation Control Glove with Real-time Gesture Recognition with FPGA Acceleration
 
-> A complete end-to-end system for real-time hand gesture recognition using dual IMU sensors, deployed on FPGA hardware for ultra-low latency inference.
+> A complete end-to-end system for real-time hand gesture recognition using dual IMU sensors, deployed on FPGA hardware for ultra-low latency inference. This includes code used in data collection, preprocessing, training on Google Colab and files needed to create IP block to run inference on FPGA.
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/)
-[![Dataset](https://img.shields.io/badge/dataset-Kaggle-20BEFF.svg)](https://kaggle.com/your-dataset-link)
-
-## 📋 Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [System Architecture](#system-architecture)
-- [Repository Structure](#repository-structure)
-- [Getting Started](#getting-started)
-- [Dataset and Data Format](#dataset-and-data-format)
-- [Usage Examples](#usage-examples)
-- [Model Details](#model-details)
-- [Hardware Deployment](#hardware-deployment)
-- [Performance](#performance)
-- [Citation](#citation)
+[![Dataset](https://img.shields.io/badge/dataset-Kaggle-20BEFF.svg)](https://www.kaggle.com/datasets/suveenellawela/hand-gesture-classification-2-imu-glove)
 
 ## 🎯 Overview
 
@@ -26,40 +13,18 @@ This project implements a real-time gesture recognition system using data from t
 - Captures 6-axis IMU data (3-axis accelerometer + 3-axis gyroscope) from 2 sensors
 - Extracts 84 hand-crafted features from 1-second windows
 - Classifies gestures using a Multi-Layer Perceptron (MLP) neural network
-- Achieves **X.X ms inference time** on FPGA hardware (Xilinx Ultra96/ZCU104)
-- Recognizes **8 gesture classes** with **XX% accuracy**
+- Achieves **sub 3 ms inference time** on FPGA hardware (Xilinx Ultra96/ZCU104)
+- Recognizes **8 gesture classes** with **99% accuracy**
 
 ### Supported Gestures
-1. Slide Left
-2. Slide Right
-3. Slide Up
-4. Slide Down
-5. Wrist Turn Clockwise
-6. Wrist Turn Anti-Clockwise
-7. Grasp
-8. None (idle/no gesture)
-
-## ✨ Features
-
-- **Complete Pipeline**: Data collection → Preprocessing → Training → Deployment
-- **Hardware Accelerated**: FPGA implementation for real-time inference
-- **Efficient Feature Extraction**: 84-dimensional feature vector optimized for embedded systems
-- **Variance-Based Segmentation**: Automatic gesture detection from continuous IMU streams
-- **Production Ready**: Includes C++ implementation and FPGA bitstream
-
-## 🏗️ System Architecture
-
-```
-IMU Sensors → Data Collection → Segmentation → Feature Extraction → Classification
-  (ESP32)        (MQTT)        (Variance)      (84 features)       (MLP on FPGA)
-```
-
-### Data Flow
-1. **Raw IMU Data**: 12 channels (2 IMUs × 6 axes) sampled at ~50Hz
-2. **Segmentation**: Variance-based detection identifies 1-second gesture windows
-3. **Feature Extraction**: 84 statistical features (mean, std, RMS, max, median, correlations)
-4. **Preprocessing**: StandardScaler normalization
-5. **Inference**: MLP classification on FPGA
+0 - NONE
+1 - SLIDE_LEFT
+2 - SLIDE_RIGHT
+3 - WRIST_TURN_CLOCKWISE
+4 - WRIST_TURN_ANTI_CLOCKWISE
+5 - SLIDE_UP
+6 - SLIDE_DOWN
+7 - SHAKE
 
 ## 📁 Repository Structure
 
@@ -99,43 +64,23 @@ gesture-recognition-fpga/
         └── mlp.xsa                   # Xilinx System Archive
 ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-**Python 3.8+** with the following packages:
-```bash
-numpy>=1.21.0
-pandas>=1.3.0
-scikit-learn>=1.0.0
-joblib>=1.1.0
-tensorflow>=2.8.0       # For model training
-matplotlib>=3.4.0       # For visualization
-jupyter>=1.0.0          # For notebooks
-```
-
-**For FPGA deployment (optional):**
-- Xilinx Vivado 2020.2+
-- PYNQ-enabled board (Ultra96, ZCU104, etc.)
-
 ### Installation
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/gesture-recognition-fpga.git
-cd gesture-recognition-fpga
+git clone https://github.com/SuveenE/presentation-control-glove.git
+cd presentation-control-glove
 ```
 
 2. **Install Python dependencies**
 ```bash
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install numpy pandas scikit-learn joblib tensorflow matplotlib jupyter
+pip3 install -r requirements.txt
 ```
 
 3. **Download the dataset**
-- Dataset is available on Kaggle: [link-to-your-dataset]
-- Extract CSV files to your working directory
+- Dataset is available on Kaggle: [https://www.kaggle.com/datasets/suveenellawela/hand-gesture-classification-2-imu-glove]
 
 ## 📊 Dataset and Data Format
 
@@ -179,104 +124,6 @@ timestamp,Imu0_linear_accleration_x,Imu0_linear_accleration_y,...
 1234587,0.14,9.83,0.04,-1.6,2.4,0.7,0.17,9.80,0.06,-1.3,2.6,0.8
 ...
 ```
-
-### Label Encoding
-
-| Label | Class Name | Description |
-|-------|------------|-------------|
-| 0 | NONE | No gesture / idle state |
-| 1 | SLIDE_LEFT | Hand sliding left |
-| 2 | SLIDE_RIGHT | Hand sliding right |
-| 3 | WRIST_TURN_CLOCKWISE | Wrist rotation clockwise |
-| 4 | WRIST_TURN_ANTI_CLOCKWISE | Wrist rotation counter-clockwise |
-| 5 | SLIDE_UP | Hand sliding up |
-| 6 | SLIDE_DOWN | Hand sliding down |
-| 7 | GRASP | Grasping motion |
-
-## 💻 Usage Examples
-
-### 1. Extract Features from Gesture Data
-
-```python
-from src.preprocess import features_from_12xN
-import pandas as pd
-
-# Load gesture CSV
-df = pd.read_csv('gesture_sample.csv')
-
-# Extract 84 features (automatically handles the DataFrame)
-features = features_from_12xN(df, timing=True)
-print(f"Extracted {len(features)} features")
-
-# Access specific features
-print(f"Wrist accel X mean: {features['Imu0_acc_x_mean']}")
-print(f"Cross-sensor correlation: {features['corr_acc_W_F']}")
-```
-
-### 2. Segment Gestures from Continuous Data
-
-Use this when you have a long recording and want to automatically detect and extract gesture windows:
-
-```bash
-# Basic usage with automatic threshold detection
-python src/segment_gestures.py long_recording.csv --output-dir ./segmented/
-
-# With visualization to tune parameters
-python src/segment_gestures.py long_recording.csv \
-    --output-dir ./segmented/ \
-    --window-size 1.0 \
-    --threshold auto \
-    --visualize
-
-# Custom threshold
-python src/segment_gestures.py recording.csv \
-    --output-dir ./out/ \
-    --threshold 5000 \
-    --min-gap 0.3
-```
-
-### 3. Full Preprocessing Pipeline
-
-```python
-import pandas as pd
-import numpy as np
-import joblib
-from src.preprocess import features_from_12xN
-
-# Load gesture CSV
-df = pd.read_csv('my_gesture.csv')
-
-# Extract features
-features_dict = features_from_12xN(df)
-
-# Convert to array
-feature_values = np.array(list(features_dict.values())).reshape(1, -1)
-
-# Load scaler and normalize
-scaler = joblib.load('model/scaler.pkl')
-features_scaled = scaler.transform(feature_values)
-
-# features_scaled is now ready for model inference (shape: 1×84)
-print(f"Scaled features ready for inference: {features_scaled.shape}")
-```
-
-### 4. Train Your Own Model
-
-Open and run `notebooks/train_model.ipynb` for the complete training pipeline:
-- Load and preprocess dataset
-- Train MLP classifier
-- Evaluate performance with confusion matrix
-- Export model weights to NumPy files
-- Save StandardScaler
-
-### 5. Test the Trained Model
-
-Use `notebooks/evaluate_model.ipynb` to:
-- Load trained model
-- Test on validation/test set
-- Generate performance metrics
-- Visualize predictions
-
 ## 🧠 Model Details
 
 ### Architecture
@@ -322,71 +169,17 @@ The model is deployed on Xilinx FPGA for ultra-low latency inference. The reposi
 - **Pre-compiled bitstream** (`hardware/bitstream/`) - Ready to deploy on PYNQ boards
 - **Test harness** (`mlp_model_test.cpp`) - Validates C++ implementation against known outputs
 
-### Quick Start on PYNQ Board
-
-**Hardware tested:** Xilinx Ultra96-V2, ZCU104
-
-1. **Copy files to board**
-```bash
-scp hardware/bitstream/* xilinx@192.168.3.1:/home/xilinx/
-scp model/scaler.pkl xilinx@192.168.3.1:/home/xilinx/
-```
-
-2. **Run on FPGA**
-```bash
-ssh xilinx@192.168.3.1
-cd /home/xilinx
-source /usr/local/share/pynq-venv/bin/activate
-
-# Load bitstream and run inference
-python your_inference_script.py
-```
-
-### Test C++ Implementation Locally
-
-```bash
-cd hardware
-g++ -O3 -o mlp_test mlp_model_test.cpp mlp_model.cpp
-./mlp_test
-```
-
-This validates the C++ model against test data embedded in `mlp_test_data.h`.
-
-### Regenerate C Headers from Model
-
-If you retrain the model and want to regenerate the C header files:
-
-```bash
-cd src
-python extract_weights.py
-```
-
-This reads the `.npy` files from `model/weights_npy/` and generates:
-- `mlp_weights.h` - Model parameters
-- `mlp_test_data.h` - Test vectors for validation
-
-## 🔬 Reproducing Results
-
-1. **Download dataset** from Kaggle
-2. **Train model:** Open `notebooks/train_model.ipynb` and run all cells
-3. **Evaluate:** Open `notebooks/evaluate_model.ipynb` for metrics and confusion matrix
-4. **Deploy to FPGA:** Follow hardware deployment steps above
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page or submit a pull request.
-
 ## 📝 Citation
 
 If you use this work in your research or project, please cite:
 
 ```bibtex
 @software{gesture_recognition_fpga_2025,
-  author = {Your Name},
-  title = {Real-Time Gesture Recognition with FPGA Acceleration},
+  author = {Suveen Ellawela},
+  title = {Presentation Control Glove with Real-time Gesture Recognition with FPGA Acceleration},
   year = {2025},
-  url = {https://github.com/yourusername/gesture-recognition-fpga},
-  note = {Dataset: https://kaggle.com/your-dataset-link}
+  url = {https://github.com/SuveenE/presentation-control-glove},
+  note = {Dataset: https://www.kaggle.com/datasets/suveenellawela/hand-gesture-classification-2-imu-glove}
 }
 ```
 
@@ -402,11 +195,7 @@ This project is licensed under the MIT License. See LICENSE file for details.
 
 ## 📧 Contact
 
-- **GitHub**: [@yourusername](https://github.com/yourusername)
-- **Email**: your.email@example.com
-- **Issues**: [GitHub Issues](https://github.com/yourusername/gesture-recognition-fpga/issues)
+- **GitHub**: https://github.com/SuveenE/
+- **Email**: suveen.te1[at]gmail.com
 
 ---
-
-**Project Tags**: `gesture-recognition` `imu-sensors` `fpga` `machine-learning` `real-time-inference` `embedded-systems` `wearable-computing` `xilinx` `pynq` `accelerometer` `gyroscope` `hand-gestures`
-
