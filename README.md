@@ -181,7 +181,7 @@ This project is licensed under the MIT License. See LICENSE file for details.
 
 ## 📧 Contact
 
-- **GitHub**: https://github.com/SuveenE/
+- **Twitter**: https://x.com/SuveenE
 - **Email**: suveen.te1[at]gmail.com
 
 ---
