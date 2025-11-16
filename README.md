@@ -10,7 +10,7 @@ This is one of the capstone projects under National University of Singapore cour
 
 ![Presentation Control Glove](assets/glove.png)
 
-Watch the system in action controlling Google Presentations:
+Watch the system in action controlling a presentation:
 
 https://github.com/user-attachments/assets/d4b98293-3bb8-4b1d-89e3-794cf29e6228
 
@@ -100,7 +100,7 @@ pip3 install -r requirements.txt
 ## 📊 Dataset and Data Format
 
 ### Dataset
-The training dataset is available on Kaggle: **[https://www.kaggle.com/datasets/suveenellawela/hand-gesture-classification-2-imu-glove]**
+The training dataset is available on [Kaggle](https://www.kaggle.com/datasets/suveenellawela/hand-gesture-classification-2-imu-glove).
 
 **Dataset Statistics:**
 - Total gesture windows: 1,388
