@@ -1,0 +1,80 @@
+{
+    "model_name": "IMU Gesture Recognition MLP",
+    "version": "1.0.0",
+    "date_trained": "2025-11-XX",
+    "framework": "TensorFlow/Keras",
+    
+    "architecture": {
+      "type": "Multi-Layer Perceptron",
+      "layers": [
+        {"type": "Dense", "units": 64, "activation": "relu", "input_shape": [84]},
+        {"type": "Dropout", "rate": 0.3},
+        {"type": "Dense", "units": 32, "activation": "relu"},
+        {"type": "Dropout", "rate": 0.3},
+        {"type": "Dense", "units": 8, "activation": "softmax"}
+      ],
+      "total_parameters": "XXXXX",
+      "trainable_parameters": "XXXXX"
+    },
+    
+    "training": {
+      "dataset": {
+        "name": "Dual-IMU Gesture Dataset",
+        "total_samples": "XXXX",
+        "num_classes": 8,
+        "train_split": 0.7,
+        "val_split": 0.15,
+        "test_split": 0.15
+      },
+      "hyperparameters": {
+        "optimizer": "Adam",
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 100,
+        "early_stopping_patience": 10,
+        "loss_function": "categorical_crossentropy"
+      }
+    },
+    
+    "classes": {
+      "0": "NONE",
+      "1": "SLIDE_LEFT",
+      "2": "SLIDE_RIGHT",
+      "3": "WRIST_TURN_CLOCKWISE",
+      "4": "WRIST_TURN_ANTI_CLOCKWISE",
+      "5": "SLIDE_UP",
+      "6": "SLIDE_DOWN",
+      "7": "SHAKE"
+    },
+    
+    "preprocessing": {
+      "feature_extraction": "84-dimensional statistical features",
+      "normalization": "StandardScaler (sklearn)",
+      "scaler_file": "scaler.pkl",
+      "window_size_seconds": 1.0,
+      "sampling_rate_hz": 30,
+      "samples_per_window": "~30"
+    },
+    
+    "sensors": {
+      "imu0": {
+        "location": "Wrist",
+        "type": "MPU6050",
+        "channels": 6,
+        "axes": ["ax", "ay", "az", "gx", "gy", "gz"]
+      },
+      "imu1": {
+        "location": "Index Finger",
+        "type": "MPU6050",
+        "channels": 6,
+        "axes": ["ax", "ay", "az", "gx", "gy", "gz"]
+      }
+    },
+    
+    "notes": [
+      "Model trained on data from X participants",
+      "Feature engineering includes per-sensor statistics and cross-sensor correlations",
+      "FPGA implementation uses fixed-point arithmetic for efficiency",
+      "Scaler parameters saved in scaler.pkl must be used during inference"
+    ]
+  }

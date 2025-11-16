@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.Python
+venv/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Large files (use Git LFS if needed)
+*.h5
+*.pb
