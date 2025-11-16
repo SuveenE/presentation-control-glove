@@ -1,4 +1,4 @@
-# 🧤 Presentation Control Glove with Real-time Gesture Recognition with FPGA Acceleration
+# 🧤 Presentation Control Glove with IMU-based Real-time Gesture Recognition and FPGA Acceleration
 
 > A complete end-to-end system for real-time hand gesture recognition using dual IMU sensors, deployed on FPGA hardware for ultra-low latency inference. This includes code used in data collection, preprocessing, training on Google Colab and files needed to create IP block to run inference on FPGA.
 
@@ -160,9 +160,9 @@ The model is deployed on Xilinx FPGA for ultra-low latency inference. The reposi
 If you use this work in your research or project, please cite:
 
 ```bibtex
-@software{gesture_recognition_fpga_2025,
+@software{presentation_glove_imu_2025,
   author = {Suveen Ellawela},
-  title = {Presentation Control Glove with Real-time Gesture Recognition with FPGA Acceleration},
+  title = {Presentation Control Glove with IMU-based Real-time Gesture Recognition and FPGA Acceleration},
   year = {2025},
   url = {https://github.com/SuveenE/presentation-control-glove},
   note = {Dataset: https://www.kaggle.com/datasets/suveenellawela/hand-gesture-classification-2-imu-glove}
